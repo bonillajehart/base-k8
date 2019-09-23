@@ -1,6 +1,10 @@
 sudo: required
 services:
   - docker
+env:
+  global:
+    - SHA=$(git rev-parse HEAD)
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 before_install:
   - openssl aes-256-cbc -K $encrypted_b2940f5a2a73_key -iv $encrypted_b2940f5a2a73_iv
     -in pristine-atom-252001-b16ccea9f557.json.enc -out pristine-atom-252001-b16ccea9f557.json
@@ -13,5 +17,11 @@ before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t seriousbob/react-test -f ./client/Dockerfile.dev ./client
 
-scripts:
+script:
   - docker run -e CI=true seriousbob/react-test npm test
+
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: master
