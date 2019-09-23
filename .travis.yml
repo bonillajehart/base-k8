@@ -13,7 +13,9 @@ before_install:
   - source $HOME/google-cloud-sdk/path.bash.inc
   - gcloud components update kubectl
   - gcloud auth activate-service-account --key-file pristine-atom-252001-b16ccea9f557.json
-  - gcloud container clusters get-credentials standard-cluster-1 --zone asia-southeast1-a --project pristine-atom-252001
+  - gcloud config set project pristine-atom-252001
+  - gcloud config set compute/zone asia-southeast1-a
+  - gcloud container clusters get-credentials standard-cluster-1
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t seriousbob/react-test -f ./client/Dockerfile.dev ./client
 
